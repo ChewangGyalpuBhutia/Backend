@@ -32,7 +32,7 @@ This backend application allows users to upload PDF documents and ask questions 
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/aiplanet-backend.git
+    git clone https://github.com/ChewangGyalpuBhutia/Backend.git
     cd aiplanet-backend
     ```
 
