@@ -1,12 +1,26 @@
-# main.py
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import fitz  # PyMuPDF
 from models import PDFDocument, Question, SessionLocal
-from langchain import LangChain
+from operations import Operations
 
 app = FastAPI()
+
+# Set up CORS
+origins = [
+    "http://localhost:3000",  # React frontend
+    # Add other origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()
@@ -43,8 +57,8 @@ async def ask_question(
         raise HTTPException(status_code=404, detail="PDF not found")
 
     try:
-        langchain = LangChain()
-        answer = langchain.ask_question(pdf_document.content, question)
+        operations = Operations()
+        answer = operations.ask_question(pdf_document.content, question)
 
         question_record = Question(pdf_id=pdf_id, question=question, answer=answer)
         db.add(question_record)
